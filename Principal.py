@@ -10,10 +10,11 @@ Created on Wed Oct 23 21:09:22 2024
 import requests
 import random
 import tkinter as tk
-import API
+from multiprocessing import Process
+from API import iniciar_aplicacion
+
 
 #%% 3. Código
-
 def leer_api():
     # Busco la respuesta
     url = "http://127.0.0.1:5000/lista"
@@ -22,8 +23,7 @@ def leer_api():
     lista = respuesta.json()
     
     return lista
-        
-    
+           
 def palabra_a_buscar():
     """
     Método que transforma la api en una lista, la lee 
@@ -42,7 +42,6 @@ def palabra_a_buscar():
     
     # Devuelvo la posición del pais a adivinar
     return lista[posicion_lista]
-
 
 def pasar_a_asteriscos(palabra):
     """
@@ -222,7 +221,7 @@ def encriptación_cesar():
     resultado = tk.Label(root2, text = f"Palabra cifrada: {palabra_encriptada}")
     resultado.pack(ipadx=5, ipady=5, expand=True)
     
-def UI():
+def GUI():
     """
     Método que contiene la parte gráfica en tkinter
     Solo tiene el root que lleva al resto de funciones
@@ -245,7 +244,6 @@ def UI():
     
     root.geometry(f"{ancho_ventana}x{alto_ventana}+{pos_x}+{pos_y}")
     root.resizable(False, False)
-    root.attributes('-topmost', 1)
     root.configure(bg = "#201E1E")
     
     cesar = tk.Button(root, text = "Encriptación Cesar", command = encriptación_cesar)
@@ -260,10 +258,25 @@ def UI():
     salir.pack(ipadx = 5, expand = True)
     
     root.mainloop()
+
     
 #%% 4. Main
 if __name__ == "__main__":
-    UI()
+    # Crear el proceso de la API e iniciarlo
+    process = Process(target=iniciar_aplicacion)
+    process.start()
+
+    # Abrir la GUI de tkinter
+    GUI()
+
+    # Destruir el proceso cuando la ventana se cierra
+    process.kill()
+    
+
+    
+    
+
+
     
 
 

@@ -65,6 +65,6 @@ def leer_lista():
         
 
 #%% 4. Main
-if __name__ == "__main__":
+def iniciar_aplicacion():
     app.run(debug = True, use_reloader = False)
 
