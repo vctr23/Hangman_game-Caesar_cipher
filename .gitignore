@@ -1,4 +1,4 @@
-# Ignore al pycache
+# Ignore all pycache
 __pycache__/
 *.pyc
 *.pyo
