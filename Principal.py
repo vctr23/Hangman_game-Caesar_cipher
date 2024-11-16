@@ -10,9 +10,10 @@ Created on Wed Oct 23 21:09:22 2024
 import requests
 import random
 import tkinter as tk
+import customtkinter as ctk
 from multiprocessing import Process
 from API import iniciar_aplicacion
-
+import GUI
 
 #%% 3. Código
 def leer_api():
@@ -220,44 +221,6 @@ def encriptación_cesar():
     # Label de la nueva ventana que mostrará la palabra cifrada
     resultado = tk.Label(root2, text = f"Palabra cifrada: {palabra_encriptada}")
     resultado.pack(ipadx=5, ipady=5, expand=True)
-    
-def GUI():
-    """
-    Método que contiene la parte gráfica en tkinter
-    Solo tiene el root que lleva al resto de funciones
-
-    Returns
-    -------
-    None.
-
-    """
-    root = tk.Tk()
-    root.title("Cifrador")
-    
-    alto_pantalla = root.winfo_screenheight()
-    ancho_pantalla = root.winfo_screenwidth()
-    ancho_ventana = 300
-    alto_ventana = 200
-    
-    pos_x = int(ancho_pantalla/2 - ancho_ventana/2)
-    pos_y = int(alto_pantalla/2 - alto_ventana/2)
-    
-    root.geometry(f"{ancho_ventana}x{alto_ventana}+{pos_x}+{pos_y}")
-    root.resizable(False, False)
-    root.configure(bg = "#201E1E")
-    
-    cesar = tk.Button(root, text = "Encriptación Cesar", command = encriptación_cesar)
-    
-    cesar.pack(ipadx = 5, ipady = 5, expand = True)
-    
-    ahorcado = tk.Button(root, text = "Juego Ahorcado", command = juego)
-    ahorcado.pack(ipadx = 5, ipady = 5, expand = True)
-    
-    salir = tk.Button(root, text = "Salir", command = lambda: root.destroy())
-    
-    salir.pack(ipadx = 5, expand = True)
-    
-    root.mainloop()
 
     
 #%% 4. Main
@@ -266,8 +229,10 @@ if __name__ == "__main__":
     process = Process(target=iniciar_aplicacion)
     process.start()
 
-    # Abrir la GUI de tkinter
-    GUI()
+    # Abrir el GUI de customtkinter
+    root = ctk.CTk()
+    app = GUI.Root(root)
+    root.mainloop()
 
     # Destruir el proceso cuando la ventana se cierra
     process.kill()
