@@ -95,7 +95,7 @@ class EncriptaciónCesar():
 
 class JuegoAhorcado():
     """
-    Clase que tiene un topleveldel juego ahorcado
+    Clase que tiene un toplevel del juego ahorcado
 
     Returns -> None.
     """
@@ -133,16 +133,30 @@ class JuegoAhorcado():
                                             command = lambda: adivinar(self.entrada.get(), self.actualizar_gui, self.entrada), 
                                             font = ("Roboto", 15),  corner_radius = 30, border_width = 1, border_color = "#FFCC70", 
                                             fg_color = "transparent")
-        self.boton_adivinar.grid(row = 4, column = 0, sticky = tk.EW, padx = 10)
+        self.boton_adivinar.grid(row = 4, column = 1, sticky = tk.EW, padx = 10)
 
         self.boton_pista = ctk.CTkButton(self.root2, text= "Mostrar Pista", 
-                                         command = lambda: mostrar_pista(self.label_pista), 
-                                         font = ("Roboto", 15),  corner_radius = 30, border_width = 1, border_color = "#FFCC70", 
-                                         fg_color = "transparent")
-        self.boton_pista.grid(row = 4, column = 2, sticky = tk.EW, padx = 10)
+                                        command = lambda: mostrar_pista(self.label_pista), 
+                                        font = ("Roboto", 15),  corner_radius = 30, border_width = 1, border_color = "#FFCC70", 
+                                        fg_color = "transparent")
+        self.boton_pista.grid(row = 4, column = 0, sticky = tk.EW, padx = 10)
+
+        self.boton_reiniciar = ctk.CTkButton(self.root2, text = "Reiniciar", 
+                                            command= lambda: self.reiniciar(root),
+                                            corner_radius = 30, border_width = 1, border_color = "#FFCC70", 
+                                            fg_color = "transparent", font = ("Roboto", 15))
+        self.boton_reiniciar.grid(row = 4, column = 2, sticky = tk.E, padx = 10)
 
     def actualizar_gui(self, mensaje, palabra_encriptada, intentos_restantes, letras_falladas):
         self.label_mensaje.configure(text=mensaje)
         self.label_palabra.configure(text=palabra_encriptada)
         self.label_intentos.configure(text=f"Intentos restantes: {intentos_restantes}")
         self.label_fallos.configure(text=f"Letras falladas: {', '.join(letras_falladas)}")
+
+    def reiniciar(self, root):
+        self.root2.destroy()
+        funciones = Principal.juego()
+        self.root2 = JuegoAhorcado(root, funciones["palabra_encriptada"], 
+                                           funciones["intentos_restantes"],
+                                           funciones["adivinar"], funciones["mostrar_pista"])
+
