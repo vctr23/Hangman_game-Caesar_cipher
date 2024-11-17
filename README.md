@@ -13,5 +13,7 @@ V1.3 -> Made some minor changes to root window (added an image using pillow). Ch
 
 V1.4 -> Changed "JuegoAhorcado" to customtkinter and moved it to "GUI". Tried to make the code less messy.
 
+V1.5 -> Added a restart button to "JuegoAhorcado".
+
 ## License
 This project is licensed under the [APACHE LICENSE 2.0](LICENSE).
