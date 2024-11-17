@@ -9,7 +9,6 @@ Created on Wed Oct 23 21:09:22 2024
 #%% 2. Imports
 import requests
 import random
-import tkinter as tk
 import customtkinter as ctk
 from multiprocessing import Process
 from API import iniciar_aplicacion
@@ -28,21 +27,18 @@ def palabra_a_buscar():
     Método que transforma la api en una lista, la lee 
     y me devuelve una palabra aleatoria para el juego
     
-    Salida: Devuelve la posicion de la lista 
+    Returns -> Devuelve la posicion de la lista 
     """
     lista = leer_api()  
     posicion_lista = random.randint(0, len(lista) -1)
     
-    # Devuelvo la posición del pais a adivinar
     return lista[posicion_lista]
 
 def pasar_a_asteriscos(palabra):
     """
     Método que sustituye la palabra por * y la devuelve
     
-    Salida
-    -------
-    palabra_encriptada : str | Devuelve la palabra encriptada
+    Returns -> palabra_encriptada : str 
     """   
     # Imprime asterisco si el caracter es una letra sino imprime ese caracter
     return "".join("*" if asterisco.isalpha() else asterisco for asterisco in palabra)
@@ -51,14 +47,8 @@ def juego():
     """
     Método que añade toda la funcionalidad del juego ahorcado
 
-    Salida: None.
+    Returns -> None.
     """
-    # Me creo la pantalla de juego
-    root3 = tk.Toplevel()
-    root3.title("Juego ahorcado")
-    root3.geometry("400x300")
-    root3.configure(bg = "#201E1E")
-    
     #Genero la palabra y asigno una variable a cada parte del diccionario a leer
     palabra = palabra_a_buscar()
     pais = palabra["pais"]
@@ -69,44 +59,29 @@ def juego():
     # Funcionalidades para el juego
     intentos_restantes = 5
     letras_falladas = []
-    
-    # Label que muestra la palabra encriptada a resolver 
-    label_palabra = tk.Label(root3, text = f"{palabra_encriptada}")
-    label_palabra.pack(pady = 15)
-    
-    # Label que muestra la pista
-    label_pista = tk.Label(root3, text = "", fg = "Green")
-    label_pista.pack()
-    
-    # Entrada de texto para adivinar
-    entrada = tk.Entry(root3)
-    entrada.pack(side = "bottom", pady = 5, expand = False)
-    
-    def adivinar():
+    mensaje = ""
+       
+    def adivinar(letra, actualizar_gui, entrada):
         """
         Método que añade la funcionalidad para poder adivinar la palabra
 
         Returns -> None.
         """
-        # Llamo a estas variables ya creadas anteriormente para usarlas
-        nonlocal intentos_restantes, palabra_encriptada
-        
-        # Recojo el input de texto 
-        letra = entrada.get().lower()
-        # Eliminar el texto anterior
-        entrada.delete(0, tk.END)
+        nonlocal intentos_restantes, palabra_encriptada, letras_falladas, mensaje
         
         # Mensaje de error si el usuario repite letras
         if letra in letras_falladas or letra in palabra_encriptada:
-            label_mensaje.config(text="Esa letra ya ha sido usada.")
+            actualizar_gui("Esa letra ya ha sido usada.", palabra_encriptada, intentos_restantes, letras_falladas)
+            entrada.delete(0, "end") # Limpio el entry
             return
         
         # Mensaje de error si no se introduce una letra o se pone más de 1 caracter
         if not letra.isalpha() or len(letra) != 1:
-            label_mensaje.config(text="Debes escribir una letra.")
+            actualizar_gui("Debes escribir una letra.", palabra_encriptada, intentos_restantes, letras_falladas)
+            entrada.delete(0, "end")
             return
         
-        # Trato la palabra como lower para evitar errores con mayusculas
+        # Lower para evitar errores con mayusculas
         if letra in pais.lower():
             # Añado las letras a la palabra encriptada si son correctas
             palabra_encriptada = "".join(
@@ -115,57 +90,36 @@ def juego():
                 letra if pais[i].lower() == letra else palabra_encriptada[i] 
                 for i in range(len(pais))
             )
-            label_palabra.config(text=" ".join(palabra_encriptada))
+            actualizar_gui(mensaje, " ".join(palabra_encriptada), intentos_restantes, letras_falladas)
+            entrada.delete(0, "end")
             
             # Compruebo si ya se han adivinado todas las letras y muestro mensaje de victoria
             if palabra_encriptada.lower() == pais.lower():
-                label_mensaje.config(text="¡Has ganado!")
-                # Desactivo el botón para que no se pueda seguir adivinando 
-                boton_adivinar.config(state = tk.DISABLED)       
+                actualizar_gui("¡Has ganado!", palabra_encriptada, intentos_restantes, letras_falladas) 
+
         else: # La letra no existe en la palabra
-            # Resto un intento 
             intentos_restantes -= 1
-            # Añado la letra a la lista de falladas
             letras_falladas.append(letra)
-            # Actualizo el número de intentos en el label 
-            label_intentos.config(text=f"Intentos restantes: {intentos_restantes}")
-            # Muestro la nueva letra de error en el label
-            label_fallos.config(text="Letras incorrectas: " + ", ".join(letras_falladas))
-        
-            # Mensaje de derrota si quedan 0 intentos
-            if intentos_restantes == 0:
-                label_mensaje.config(text=f"Has perdido. El país era {pais}.")
-                # Desactivo el botón para que no se pueda seguir adivinando
-                boton_adivinar.config(state=tk.DISABLED)
-    
-    
-    def mostrar_pista():
+            actualizar_gui(mensaje, palabra_encriptada, intentos_restantes, letras_falladas)
+            entrada.delete(0, "end")
+
+            if intentos_restantes == 0:     # Mensaje de derrota si quedan 0 intentos
+                actualizar_gui(f"Has perdido. El país era {pais}.", palabra_encriptada, intentos_restantes, letras_falladas)
+     
+    def mostrar_pista(label_pista):
         """
         Método que actualiza el label para mostrar la pista
 
         Returns -> None.
         """
-        label_pista.config(text = f"Pista: {pista}")
+        label_pista.configure(text = f"Pista: {pista}")
         
-    # Boton de juego que mostrará el label con la pista
-    boton_pista = tk.Button(root3, text="Mostrar pista", command = mostrar_pista)
-    boton_pista.pack()
-
-    # Label que muestra información del juego
-    label_mensaje = tk.Label(root3, text = "")
-    label_mensaje.pack(pady = 25)
-    
-    # Label que muestra los intentos restantes
-    label_intentos = tk.Label(root3, text = f"Intentos restantes: {intentos_restantes}", fg = "Red")
-    label_intentos.pack()
-    
-    # Label que muestra las letras que no están en la palabra
-    label_fallos = tk.Label(root3, text = f"Letras falladas: {letras_falladas}", fg = "Red")
-    label_fallos.pack(pady = 15)
-    
-    # Boton que genera el evento de adivinar con la entrada de texto
-    boton_adivinar = tk.Button(root3, text = "Adivinar", command = adivinar)
-    boton_adivinar.pack()    
+    return {"adivinar": adivinar, 
+            "mostrar_pista": mostrar_pista,
+            "palabra_encriptada": palabra_encriptada,
+            "pista": pista, 
+            "intentos_restantes": intentos_restantes, 
+            "letras_falladas": letras_falladas}
 
 def encriptación_cesar():
     """
@@ -177,7 +131,7 @@ def encriptación_cesar():
     palabra = palabra_a_buscar()["pais"]
     
     letras = "abcdefghijklmnñopqrstuvwxyz"
-    k = random.randint(1, 10)  # K es el desplazamiento del cifrado 
+    k = random.randint(1, 10)
     palabra_encriptada = ""
     
     for letra in palabra.lower():
