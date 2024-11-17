@@ -8,8 +8,8 @@ Created on Sat Nov 16 10:05:10 2024
 #%% 2. Imports
 import tkinter as tk
 import customtkinter as ctk
-from Principal import encriptación_cesar, juego
-
+import Principal
+from PIL import Image
 
 #%% 3. Metodos
 def centrar_ventana(root, ancho_ventana):
@@ -25,12 +25,10 @@ def centrar_ventana(root, ancho_ventana):
 #%% 4. Clases
 class Root():
     """
-    Clase que contiene la parte gráfica en tkinter
-    Solo tiene el root que lleva al resto de funciones
+    Clase que contiene el Root 
+    y sus funciones en customtkinter
 
-    Returns
-    -------
-    None.
+    Returns -> None.
 
     """
     def __init__(self, root):
@@ -41,28 +39,60 @@ class Root():
         self.root.resizable(0, 0)
 
         self.root.grid_rowconfigure([0, 1, 2], weight = 1)
-        self.root.grid_columnconfigure(0, weight = 1)
+        self.root.grid_columnconfigure([0, 1], weight = 1)
 
+        self.img = ctk.CTkImage(dark_image=Image.open("Images\\bg_image.png"), size= (285, 307))
         
 
-        self.cesar = ctk.CTkButton(self.root, text = "Encriptación Cesar", command = encriptación_cesar, corner_radius = 30,
-                            border_width = 1, border_color = "#FFCC70", fg_color = "transparent")
-        self.cesar.grid(row = 0, column = 0, padx = 20, pady = 20, sticky = tk.EW)
-        
-        self.ahorcado = ctk.CTkButton(self.root, text = "Juego ahorcado", command = juego, corner_radius = 30,
-                            border_width = 1, border_color = "#FFCC70", fg_color = "transparent")
-        self.ahorcado.grid(row = 1,  column = 0, padx = 20, pady = 20, sticky = tk.EW)
+        self.image_lbl = ctk.CTkLabel(self.root, image = self.img, text = "")
+        self.image_lbl.grid(rowspan = 3, column = 0, padx = 5, pady = 5, sticky = tk.W)
 
-        self.salir = ctk.CTkButton(self.root, text = "Salir", command= lambda: root.destroy() , corner_radius = 30,
-                            border_width = 1, border_color = "#FFCC70", fg_color = "transparent")
-        self.salir.grid(row = 2, column = 0, sticky = tk.EW, padx = 50, pady = 20)
+        self.cesar = ctk.CTkButton(self.root, text = "Encriptación Cesar", command = self.abrir_encriptación, 
+                                   corner_radius = 30, border_width = 1, border_color = "#FFCC70", 
+                                   fg_color = "transparent", font=("Roboto", 14))
+        self.cesar.grid(row = 0, column = 1, padx = 20, pady = 20, sticky = tk.EW)
+        
+        self.ahorcado = ctk.CTkButton(self.root, text = "Juego ahorcado", command = self.abrir_juego, 
+                                      corner_radius = 30, border_width = 1, border_color = "#FFCC70", 
+                                      fg_color = "transparent", font=("Roboto", 14))
+        self.ahorcado.grid(row = 1,  column = 1, padx = 20, pady = 20, sticky = tk.EW)
+
+        self.salir = ctk.CTkButton(self.root, text = "Salir", command= lambda: root.destroy() , 
+                                   corner_radius = 30, border_width = 1, border_color = "#FFCC70", 
+                                   fg_color = "transparent", font=("Roboto", 14))
+        self.salir.grid(row = 2, column = 1, sticky = tk.EW, padx = 50, pady = 20)
+
+    # Método para abrir la ventana EncriptacionCesar
+    def abrir_encriptación(self):
+        palabra, palabra_encriptada = Principal.encriptación_cesar()
+        self.ventana_encriptacion = EncriptaciónCesar(self.root, palabra, palabra_encriptada)
+  
+    def abrir_juego():
+        print()
 
 class EncriptaciónCesar():
     """
-    Para commits futuros
+    Clase que contiene un TopLevel 
+    de encriptación_cesar
+
+    Returns -> None.
     """
-    def __init__(self):
-        pass
+    def __init__(self, root, palabra, palabra_encriptada):
+        self.root1 = ctk.CTkToplevel(root)
+        self.root1.title("Resultado encriptación cesar")
+        self.root1.attributes("-topmost", 1)    # Fuerzo que aparezca encima de todas
+        centrar_ventana(self.root1, 400)
+
+        self.root1.grid_rowconfigure([0, 1], weight = 1)
+        self.root1.grid_columnconfigure(0, weight = 1)
+
+        self.sin_cifrar = ctk.CTkLabel(self.root1, text = f"Palabra/s sin cifrar: {palabra}",
+                                    font=("Roboto", 20))
+        self.sin_cifrar.grid(row = 0, column = 0, sticky = tk.EW, padx = 20)
+
+        self.resultado = ctk.CTkLabel(self.root1, text = f"Palabra cifrada: {palabra_encriptada}",
+                                      font=("Roboto", 20))
+        self.resultado.grid(row = 1, column = 0, sticky = tk.EW, padx = 20)
 
 class JuegoAhorcado():
     """
@@ -70,5 +100,3 @@ class JuegoAhorcado():
     """
     def __init__(self) -> None:
         pass
-
-#%% 5. Main

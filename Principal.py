@@ -20,9 +20,7 @@ def leer_api():
     # Busco la respuesta
     url = "http://127.0.0.1:5000/lista"
     respuesta = requests.get(url)
-    
     lista = respuesta.json()
-    
     return lista
            
 def palabra_a_buscar():
@@ -32,14 +30,8 @@ def palabra_a_buscar():
     
     Salida: Devuelve la posicion de la lista 
     """
-    lista = leer_api()
-    
-    # Por si se necesita imprimir los datos de la lista
-    # for country in lista:
-    #     print(f"Pais: {country['pais']}, Pista: {country['pista']}")
-     
-    # Genero un numero aleatorio que será el pais de la lista a leer 
-    posicion_lista = random.randint(0, len(lista) -1 )
+    lista = leer_api()  
+    posicion_lista = random.randint(0, len(lista) -1)
     
     # Devuelvo la posición del pais a adivinar
     return lista[posicion_lista]
@@ -51,12 +43,7 @@ def pasar_a_asteriscos(palabra):
     Salida
     -------
     palabra_encriptada : str | Devuelve la palabra encriptada
-    """
-    # Para reemplazarla por *, hago replace de la palabra e imprimo len(palabra) asteriscos
-    # palabra_encriptada = palabra.replace(palabra, "*" * len(palabra))
-    # return palabra_encriptada
-    
-    # Lo he modificado para poder imprimir las letras ya adivinadas
+    """   
     # Imprime asterisco si el caracter es una letra sino imprime ese caracter
     return "".join("*" if asterisco.isalpha() else asterisco for asterisco in palabra)
 
@@ -99,22 +86,22 @@ def juego():
         """
         Método que añade la funcionalidad para poder adivinar la palabra
 
-        Salida: None.
+        Returns -> None.
         """
         # Llamo a estas variables ya creadas anteriormente para usarlas
         nonlocal intentos_restantes, palabra_encriptada
         
         # Recojo el input de texto 
         letra = entrada.get().lower()
-        # Elimino el texto que hubiese antes para poder escribir uno nuevo
+        # Eliminar el texto anterior
         entrada.delete(0, tk.END)
         
-        # Muestro mensaje de error si el usuario repite letras
+        # Mensaje de error si el usuario repite letras
         if letra in letras_falladas or letra in palabra_encriptada:
             label_mensaje.config(text="Esa letra ya ha sido usada.")
             return
         
-        # Muestro mensaje de error si no se introduce una letra o se pone más de 1 caracter
+        # Mensaje de error si no se introduce una letra o se pone más de 1 caracter
         if not letra.isalpha() or len(letra) != 1:
             label_mensaje.config(text="Debes escribir una letra.")
             return
@@ -134,8 +121,7 @@ def juego():
             if palabra_encriptada.lower() == pais.lower():
                 label_mensaje.config(text="¡Has ganado!")
                 # Desactivo el botón para que no se pueda seguir adivinando 
-                boton_adivinar.config(state = tk.DISABLED)
-                
+                boton_adivinar.config(state = tk.DISABLED)       
         else: # La letra no existe en la palabra
             # Resto un intento 
             intentos_restantes -= 1
@@ -146,7 +132,7 @@ def juego():
             # Muestro la nueva letra de error en el label
             label_fallos.config(text="Letras incorrectas: " + ", ".join(letras_falladas))
         
-            # Verifico si quedan 0 intentos y muestro mensaje de derrota
+            # Mensaje de derrota si quedan 0 intentos
             if intentos_restantes == 0:
                 label_mensaje.config(text=f"Has perdido. El país era {pais}.")
                 # Desactivo el botón para que no se pueda seguir adivinando
@@ -157,7 +143,7 @@ def juego():
         """
         Método que actualiza el label para mostrar la pista
 
-        Salida: None.
+        Returns -> None.
         """
         label_pista.config(text = f"Pista: {pista}")
         
@@ -188,22 +174,7 @@ def encriptación_cesar():
     
     Formula cifrado C(resultado) = P(posicion cada letra en la palabra) + K(posiciones a desplazar)
     """
-    
-    #Creo una nueva ventana en tkinter
-    root2 = tk.Toplevel()
-    root2.title("Resultado encriptación cesar")
-    root2.geometry("300x200")
-    root2.configure(bg = "#201E1E")
-    
     palabra = palabra_a_buscar()["pais"]
-    
-    # Label de la nueva ventana que mostrará la palabra
-    sin_cifrar = tk.Label(root2, text = f"Palabra sin cifrar: {palabra}")
-    sin_cifrar.pack(
-        ipadx=5,
-        ipady=5,
-        expand=True
-        )
     
     letras = "abcdefghijklmnñopqrstuvwxyz"
     k = random.randint(1, 10)  # K es el desplazamiento del cifrado 
@@ -217,12 +188,8 @@ def encriptación_cesar():
         # Construyo la palabra encriptada añadiendo las letras 
         palabra_encriptada = palabra_encriptada + letras[modulo]
     
-    
-    # Label de la nueva ventana que mostrará la palabra cifrada
-    resultado = tk.Label(root2, text = f"Palabra cifrada: {palabra_encriptada}")
-    resultado.pack(ipadx=5, ipady=5, expand=True)
-
-    
+    return palabra, palabra_encriptada
+ 
 #%% 4. Main
 if __name__ == "__main__":
     # Crear el proceso de la API e iniciarlo
@@ -236,13 +203,3 @@ if __name__ == "__main__":
 
     # Destruir el proceso cuando la ventana se cierra
     process.kill()
-    
-
-    
-    
-
-
-    
-
-
-    

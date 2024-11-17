@@ -9,6 +9,7 @@ V1.1 -> Changed main on class API to a function ("iniciar_aplicacion") that runs
 
 V1.2 -> Moved Root window to a diferent file to make "Pricipal.py" a little bit more readable. Changed root window, now uses customtkinter (tkinter is still used for some features).
 
+V1.3 -> Made some minor changes to root window (now has an image). Changed "EncriptaciónCesar" to customtkinter and moved it to "GUI". Erased some non-useful codelines on "Principal.py" (old tkinter windows and some comments)
 
 ## License
 This project is licensed under the [APACHE LICENSE 2.0](LICENSE).
