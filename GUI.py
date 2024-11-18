@@ -112,8 +112,9 @@ class JuegoAhorcado():
         self.label_palabra = ctk.CTkLabel(self.root2, text= f"{palabra_encriptada}", font = ("Roboto", 18))
         self.label_palabra.grid(row = 0, columnspan = 3, sticky = tk.EW)
 
-        self.entrada = ctk.CTkEntry(self.root2, font = ("Roboto", 15))
-        self.entrada.grid(row = 1, columnspan = 3, sticky = tk.EW)
+        self.entrada = ctk.CTkEntry(self.root2, font = ("Roboto", 15), placeholder_text= "Introduce la letra", 
+                                    border_width=0.5)
+        self.entrada.grid(row = 1, columnspan = 3, sticky = tk.EW, padx = 20, pady = 20)
 
         self.label_mensaje = ctk.CTkLabel(self.root2, text= "", font = ("Roboto", 16))
         self.label_mensaje.grid(row = 2, columnspan = 3, sticky = tk.EW)
