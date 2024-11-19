@@ -33,6 +33,7 @@ class Root():
         ctk.set_appearance_mode("dark")
         self.root = root
         self.root.title("Cifrador")
+        self.root.iconbitmap("Images\\logo.ico")
         centrar_ventana(self.root, 500)
         self.root.resizable(0, 0)
 
@@ -45,19 +46,19 @@ class Root():
         self.image_lbl.grid(rowspan = 3, column = 0, padx = 5, pady = 5, sticky = tk.W)
 
         self.cesar = ctk.CTkButton(self.root, text = "Encriptación Cesar", command = self.abrir_encriptación, 
-                                   corner_radius = 30, border_width = 1, border_color = "#FFCC70", 
+                                   corner_radius = 30, border_width = 2, border_color = "#FFCC70", 
                                    fg_color = "transparent", font=("Roboto", 14))
         self.cesar.grid(row = 0, column = 1, padx = 20, pady = 20, sticky = tk.EW)
         
         self.ahorcado = ctk.CTkButton(self.root, text = "Juego ahorcado", command = self.abrir_juego, 
-                                      corner_radius = 30, border_width = 1, border_color = "#FFCC70", 
+                                      corner_radius = 30, border_width = 2, border_color = "#FFCC70", 
                                       fg_color = "transparent", font=("Roboto", 14))
-        self.ahorcado.grid(row = 1,  column = 1, padx = 20, pady = 20, sticky = tk.EW)
+        self.ahorcado.grid(row = 1, column = 1, padx = 20, pady = 20, sticky = tk.EW)
 
         self.salir = ctk.CTkButton(self.root, text = "Salir", command= lambda: root.destroy() , 
-                                   corner_radius = 30, border_width = 1, border_color = "#FFCC70", 
+                                   corner_radius = 30, border_width = 2, border_color = "#FFCC70", 
                                    fg_color = "transparent", font=("Roboto", 14))
-        self.salir.grid(row = 2, column = 1, sticky = tk.EW, padx = 50, pady = 20)
+        self.salir.grid(row = 2, column = 1, padx = 50, pady = 20, sticky = tk.EW)
 
     def abrir_encriptación(self):
         palabra, palabra_encriptada = Principal.encriptación_cesar()
@@ -78,7 +79,7 @@ class EncriptaciónCesar():
     def __init__(self, root, palabra, palabra_encriptada):
         self.root1 = ctk.CTkToplevel(root)
         self.root1.title("Resultado encriptación cesar")
-        self.root1.attributes("-topmost", True)    # Fuerzo que aparezca encima de todas
+        self.root1.attributes("-topmost", True)
         centrar_ventana(self.root1, 400)
         self.root1.resizable(0, 0)
 
@@ -132,21 +133,21 @@ class JuegoAhorcado():
 
         self.boton_adivinar = ctk.CTkButton(self.root2, text= "Adivinar", 
                                             command = lambda: adivinar(self.entrada.get(), self.actualizar_gui, self.entrada), 
-                                            font = ("Roboto", 15),  corner_radius = 30, border_width = 1, border_color = "#FFCC70", 
+                                            font = ("Roboto", 15),  corner_radius = 30, border_width = 2, border_color = "#FFCC70", 
                                             fg_color = "transparent")
         self.boton_adivinar.grid(row = 4, column = 1, sticky = tk.EW, padx = 10)
 
         self.boton_pista = ctk.CTkButton(self.root2, text= "Mostrar Pista", 
                                         command = lambda: mostrar_pista(self.label_pista), 
-                                        font = ("Roboto", 15),  corner_radius = 30, border_width = 1, border_color = "#FFCC70", 
+                                        font = ("Roboto", 15),  corner_radius = 30, border_width = 2, border_color = "#FFCC70", 
                                         fg_color = "transparent")
         self.boton_pista.grid(row = 4, column = 0, sticky = tk.EW, padx = 10)
 
         self.boton_reiniciar = ctk.CTkButton(self.root2, text = "Reiniciar", 
                                             command= lambda: self.reiniciar(root),
-                                            corner_radius = 30, border_width = 1, border_color = "#FFCC70", 
+                                            corner_radius = 30, border_width = 2, border_color = "#FFCC70", 
                                             fg_color = "transparent", font = ("Roboto", 15))
-        self.boton_reiniciar.grid(row = 4, column = 2, sticky = tk.E, padx = 10)
+        self.boton_reiniciar.grid(row = 4, column = 2, sticky = tk.EW, padx = 10)
 
     def actualizar_gui(self, mensaje, palabra_encriptada, intentos_restantes, letras_falladas):
         self.label_mensaje.configure(text=mensaje)
@@ -160,4 +161,3 @@ class JuegoAhorcado():
         self.root2 = JuegoAhorcado(root, funciones["palabra_encriptada"], 
                                            funciones["intentos_restantes"],
                                            funciones["adivinar"], funciones["mostrar_pista"])
-
