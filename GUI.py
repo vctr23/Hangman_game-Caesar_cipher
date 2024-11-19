@@ -60,15 +60,23 @@ class Root():
                                    fg_color = "transparent", font=("Roboto", 14))
         self.salir.grid(row = 2, column = 1, padx = 50, pady = 20, sticky = tk.EW)
 
+        self.ventana_encriptacion = None
+        self.ventana_juego = None
     def abrir_encriptación(self):
         palabra, palabra_encriptada = Principal.encriptación_cesar()
-        self.ventana_encriptacion = EncriptaciónCesar(self.root, palabra, palabra_encriptada)
+        if self.ventana_encriptacion is None or not self.ventana_encriptacion.root1.winfo_exists():
+            self.ventana_encriptacion = EncriptaciónCesar(self.root, palabra, palabra_encriptada)
+        else:
+            self.ventana_encriptacion.root1.focus()
   
     def abrir_juego(self):
         funciones = Principal.juego()
-        self.ventana_juego = JuegoAhorcado(self.root, funciones["palabra_encriptada"], 
-                                           funciones["intentos_restantes"],
-                                           funciones["adivinar"], funciones["mostrar_pista"])
+        if self.ventana_juego is None or not self.ventana_juego.root2.winfo_exists(): 
+            self.ventana_juego = JuegoAhorcado(self.root, funciones["palabra_encriptada"], 
+                                            funciones["intentos_restantes"],
+                                            funciones["adivinar"], funciones["mostrar_pista"])
+        else:
+            self.ventana_juego.root2.focus()
 
 class EncriptaciónCesar():
     """
@@ -80,7 +88,7 @@ class EncriptaciónCesar():
         self.root1 = ctk.CTkToplevel(root)
         self.root1.title("Resultado encriptación cesar")
         self.root1.attributes("-topmost", True)
-        centrar_ventana(self.root1, 400)
+        centrar_ventana(self.root1, 500)
         self.root1.resizable(0, 0)
 
         self.root1.grid_rowconfigure([0, 1], weight = 1)

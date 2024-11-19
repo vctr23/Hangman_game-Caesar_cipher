@@ -15,7 +15,7 @@ V1.4 -> Changed "JuegoAhorcado" to customtkinter and moved it to "GUI". Tried to
 
 V1.5 -> Added a restart button to "JuegoAhorcado".
 
-V1.6 -> Added a logo on root CTk window. Fixed some minor errors on GUI windows.
+V1.6 -> Added a logo on root CTk window. Fixed some minor errors on GUI windows, you won´t be able to open multiple of the same CTkToplevels like before (it was not practical).
 
 ## License
 This project is licensed under the [APACHE LICENSE 2.0](LICENSE).
